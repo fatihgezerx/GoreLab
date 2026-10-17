@@ -69,6 +69,7 @@ namespace GoreLab
         private bool sourcePending;
         private int sourcePendingTicks;
         private int selectedTab;
+        private VeneerStyle.TabSwitcher pageSwitcher;
         private string shownPillText;
         private string shownPillKind;
         private string shownStatus;
@@ -196,7 +197,8 @@ namespace GoreLab
                 element.style.flexGrow = 1f;
                 element.style.flexShrink = 1f;
                 element.style.minHeight = 0f;
-                var container = new IMGUIContainer(() => window.ShellDrawPage(page));
+                VisualElement host = element;
+                var container = new IMGUIContainer(() => DrawPageFaded(host, page));
                 container.AddToClassList("gore-ims");
                 element.Add(container);
                 if (page == GoreStudioPage.Cuts)
@@ -208,7 +210,33 @@ namespace GoreLab
                 pages.Add(element);
             }
 
+            pageSwitcher = new VeneerStyle.TabSwitcher(pages, pageElements);
+            pageSwitcher.Initialize(tabBar, -1);
+
             left.Add(BuildApplyCard(brand));
+        }
+
+        // An IMGUIContainer ignores the opacity of its parents, so the tab switch fade would show only as a slide and the page would pop
+        // in and out. The page element carries the animated opacity; the IMGUI draw reads it and tints everything with GUI.color.
+        private void DrawPageFaded(VisualElement host, GoreStudioPage page)
+        {
+            float alpha = host.resolvedStyle.opacity;
+            if (alpha >= 0.999f)
+            {
+                window.ShellDrawPage(page);
+                return;
+            }
+
+            Color previous = GUI.color;
+            GUI.color = new Color(previous.r, previous.g, previous.b, previous.a * Mathf.Clamp01(alpha));
+            try
+            {
+                window.ShellDrawPage(page);
+            }
+            finally
+            {
+                GUI.color = previous;
+            }
         }
 
         private VisualElement BuildTargetCard(VeneerBrand brand)
@@ -365,7 +393,18 @@ namespace GoreLab
         {
             selectedTab = index;
             SessionState.SetInt(TabKey, index);
-            ShowPages();
+            GoreStudioModel model = window.Model;
+            bool usable = model != null && model.HasTarget
+                && (index == (int)GoreStudioPage.Static ? window.HasStaticTarget : window.HasSkinnedTarget);
+            if (usable && pageSwitcher != null)
+            {
+                pageSwitcher.Switch(index);
+            }
+            else
+            {
+                ShowPages();
+            }
+
             window.Repaint();
         }
 
@@ -516,6 +555,12 @@ namespace GoreLab
 
         private void ShowPages(bool has, bool isStatic, bool skinned, int selected)
         {
+            // The switcher owns the pages' display while it fades; it ends on the tab bar's selection, and the next refresh checks again.
+            if (pageSwitcher != null && pageSwitcher.Animating)
+            {
+                return;
+            }
+
             for (int i = 0; i < pageElements.Length; i++)
             {
                 bool usable = has && (i == (int)GoreStudioPage.Static ? isStatic : skinned);

@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased] - Layout-driven Inspectors (2026-10-17)
+
+### Editor
+- **The Gore Character and Gore Profile Inspectors are drawn from Veneer layouts (not run in Unity; compiled offline only).** `GoreCharacterStudioEditor` and `GoreProfileStudioEditor` now derive from `VeneerLayoutDrivenInspector` and draw `GoreCharacterDefaultLayout` / `GoreProfileDefaultLayout` (or the project's own copy made in `Tools > Veneer > Inspector Designer`). Same tabs, cards, fields and texts as before. The non-field pieces are registered custom items (`GoreCharacterItems`, `GoreProfileItems`, `GoreCutsView`, `GoreProfileSummaryView`): state pills that also keep the header subtitle current, the parts-off strip, *Open Gore Studio*, *Use the default blood*, the rules note, the cuts list and the two read-only summaries; *Blood scale* keeps its 0.01 to 4 range through a custom widget. Small differences: the parts-off strip and the "not set up" hints now sit inside the Profile card, the Meshes cards sit in an untitled card, and the raw data arrays of a profile are hidden in the default layout. A selection of several objects keeps its own short view. The fallback IMGUI editors and the Gore Studio window are untouched.
+
 ## [Unreleased] - Renamed to GoreLab (2026-10-17)
 
 ### Changed

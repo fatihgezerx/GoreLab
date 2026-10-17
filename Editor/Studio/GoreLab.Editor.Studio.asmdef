@@ -1,0 +1,23 @@
+{
+    "name": "GoreLab.Editor.Studio",
+    "rootNamespace": "GoreLab",
+    "references": [
+        "GoreLab.Runtime",
+        "GoreLab.Editor",
+        "Veneer.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "HAS_UNITASK",
+        "HAS_VENEER"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

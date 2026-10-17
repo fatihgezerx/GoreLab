@@ -1,0 +1,120 @@
+/*
+ * GoreLab - brand and Inspector / window styles, added on top of the Veneer sheet.
+ *
+ * The accent is the exact GoreLab deep magenta-red (#C2185B). The brand passes the class "gore-accent" as its accent class,
+ * so the kit adds no accent preset of its own and these rules are the only ones that set the accent variables.
+ * Spacing is margins only (no gap in USS).
+ */
+
+.vn-root.gore-accent {
+    --vn-accent: #C2185B;
+    --vn-accent-soft: rgba(194, 24, 91, 0.18);
+    --vn-accent-line: rgba(194, 24, 91, 0.60);
+    --vn-pressed: rgba(194, 24, 91, 0.26);
+}
+
+.vn-root.vn-root--light.gore-accent {
+    --vn-accent: #A3144C;
+    --vn-accent-soft: rgba(163, 20, 76, 0.13);
+    --vn-accent-line: rgba(163, 20, 76, 0.60);
+    --vn-pressed: rgba(163, 20, 76, 0.22);
+}
+
+/* ------------------------------------------------------------------ cut rows (Gore Character / Gore Profile) */
+
+.gore-cut-name {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 40px;
+    margin: 0 8px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gore-cut-limb {
+    width: 110px;
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--vn-text-muted);
+    margin: 0 8px 0 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gore-cut-state {
+    width: 64px;
+    flex-shrink: 0;
+    margin-right: 8px;
+}
+
+.gore-cut-button {
+    width: 60px;
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.gore-cut-detail {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 40px;
+    margin: 0 0 0 0;
+    font-size: 11px;
+    color: var(--vn-text-muted);
+    white-space: normal;
+}
+
+.gore-cut-block {
+    padding: 4px 6px;
+    margin: 0 0 2px 0;
+    border-radius: 4px;
+}
+
+.gore-cut-block--alt {
+    background-color: var(--vn-track);
+}
+
+.gore-cut-title {
+    margin: 0 0 1px 0;
+    padding: 0;
+    -unity-font-style: bold;
+}
+
+/* ------------------------------------------------------------------ Gore Studio window shell */
+
+.gore-shell {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.gore-body {
+    flex-direction: row;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+}
+
+.gore-left {
+    flex-shrink: 0;
+    min-width: 330px;
+    max-width: 430px;
+    margin: 0 8px 0 0;
+}
+
+.gore-right {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    border-radius: 6px;
+    border-width: 1px;
+    border-color: var(--vn-card-border);
+    overflow: hidden;
+}
+
+.gore-ims {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.gore-modes {
+    margin: 0 0 6px 0;
+}

@@ -1,0 +1,20 @@
+{
+    "name": "GoreLab.Pooling.Runtime",
+    "rootNamespace": "GoreLab",
+    "references": [
+        "GoreLab.Runtime",
+        "PoolSystem.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "HAS_UNITASK",
+        "HAS_POOL_SYSTEM"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

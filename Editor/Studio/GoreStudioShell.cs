@@ -44,13 +44,13 @@ namespace GoreLab
 
         private ObjectField prefabField;
         private VisualElement kindRow;
-        private EnumField kindField;
+        private VeneerEnumDropdownField<GoreMeshKind> kindField;
         private Button kindAuto;
         private VisualElement rigRow;
-        private EnumField rigField;
+        private VeneerEnumDropdownField<GoreRigType> rigField;
         private Button rigAuto;
         private VisualElement meshRow;
-        private DropdownField meshField;
+        private VeneerDropdownField meshField;
         private string[] meshNamesShown;
 
         private VisualElement fillCard;
@@ -252,28 +252,25 @@ namespace GoreLab
             });
             card.Add(VeneerStyle.FieldRow("Prefab", prefabField, "A character prefab (or an object of the scene). Nothing is added to the scene.", out _));
 
-            kindField = new EnumField(GoreMeshKind.Skinned);
-            kindField.RegisterValueChangedCallback(evt => window.ShellSetKind((GoreMeshKind)evt.newValue));
+            kindField = VeneerDropdown.CreateEnum(GoreMeshKind.Skinned, kind => window.ShellSetKind(kind), brand);
             kindAuto = VeneerStyle.Button("Auto", null, "Go back to what was found by itself.", window.ShellResetKind, false, brand);
             kindRow = ValueWithAuto("Mesh type", kindField, kindAuto,
                 "Skinned meshes follow bones. Static meshes have none (they break into pieces). Found by itself; change it if it is wrong.");
             card.Add(kindRow);
 
-            rigField = new EnumField(GoreRigType.Humanoid);
-            rigField.RegisterValueChangedCallback(evt => window.ShellSetRig((GoreRigType)evt.newValue));
+            rigField = VeneerDropdown.CreateEnum(GoreRigType.Humanoid, rig => window.ShellSetRig(rig), brand);
             rigAuto = VeneerStyle.Button("Auto", null, "Go back to what was found by itself.", window.ShellResetRig, false, brand);
             rigRow = ValueWithAuto("Rig", rigField, rigAuto,
                 "Humanoid gives the thirteen cuts by itself. Generic needs bones picked by hand. Found from the Animator's avatar; change it if it is wrong.");
             card.Add(rigRow);
 
-            meshField = new DropdownField(new List<string> { "-" }, 0);
-            meshField.RegisterValueChangedCallback(evt =>
+            meshField = (VeneerDropdownField)VeneerDropdown.Create(new List<string> { "-" }, 0, index =>
             {
-                if (meshField.index >= 0)
+                if (index >= 0)
                 {
-                    window.ShellActivateStaticMesh(meshField.index);
+                    window.ShellActivateStaticMesh(index);
                 }
-            });
+            }, brand);
             meshRow = VeneerStyle.FieldRow("Mesh", meshField, "The mesh to set up. Each mesh of the prefab has its own settings and its own profile.", out _);
             card.Add(meshRow);
             return card;
@@ -481,9 +478,9 @@ namespace GoreLab
             VeneerStyle.SetDisplay(rigRow, skinned);
             if (has)
             {
-                if (!Equals(kindField.value, model.Kind))
+                if (!Equals(kindField.EnumValue, model.Kind))
                 {
-                    kindField.SetValueWithoutNotify(model.Kind);
+                    kindField.EnumValue = model.Kind;
                 }
 
                 kindAuto.SetEnabled(model.KindOverridden);
@@ -491,9 +488,9 @@ namespace GoreLab
 
             if (skinned)
             {
-                if (!Equals(rigField.value, model.Rig))
+                if (!Equals(rigField.EnumValue, model.Rig))
                 {
-                    rigField.SetValueWithoutNotify(model.Rig);
+                    rigField.EnumValue = model.Rig;
                 }
 
                 rigAuto.SetEnabled(model.RigOverridden);
@@ -504,18 +501,18 @@ namespace GoreLab
             VeneerStyle.SetDisplay(meshRow, showMesh);
             if (showMesh)
             {
+                int active = tools.ActiveIndex;
                 if (!ReferenceEquals(meshNamesShown, tools.MeshNames))
                 {
                     meshNamesShown = tools.MeshNames;
                     meshChoices.Clear();
                     meshChoices.AddRange(meshNamesShown);
-                    meshField.choices = meshChoices;
+                    meshField.SetChoices(meshChoices, active);
                 }
 
-                int active = tools.ActiveIndex;
-                if (active >= 0 && active < meshChoices.Count && meshField.index != active)
+                if (active >= 0 && active < meshChoices.Count && meshField.Value != active)
                 {
-                    meshField.SetValueWithoutNotify(meshChoices[active]);
+                    meshField.SetValue(active);
                 }
             }
         }
